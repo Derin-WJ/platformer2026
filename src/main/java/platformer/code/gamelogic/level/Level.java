@@ -212,29 +212,37 @@ public class Level {
 			wName = "Falling_water";
 		}
 		Water w = new Water (col, row, tileSize, tileset.getImage(wName), this, fullness);
-		int save = fullness;
+		
 		map.addTile(col, row, w);
 
                        //check if we can go down
 
                        //if we can’t go down go left and right.
 		//right
-		if(map.getTiles()[col][row+1].isSolid() != true){
+		if((map.getTiles()[col][row+1].isSolid() != true) && (map.getTiles()[col][row+2].isSolid() != true)){
+			fullness = 4;
 			water(col, row +1, map, 0 );
-			
 		} else{
-			//(map.getTiles()[col+1][row] != null) adds at the end of if below
-		if(col+1 < map.getTiles().length && !(map.getTiles()[col+1][row] instanceof Water) && !(map.getTiles()[col+1][row].isSolid())) {
-			
-			fullness--;
-			if(fullness ==0){
+			//fullness = 4;
+			if(col+1 < map.getTiles().length && !(map.getTiles()[col+1][row] instanceof Water) && !(map.getTiles()[col+1][row].isSolid())) {
+				if(map.getTiles()[col][row+1].isSolid() != true){
+					if(fullness <=0){
+					fullness = 1;
+				} else{
+					fullness--;
+				}
+			water(col+1, row+1, map, fullness );
+			}
+			else if(map.getTiles()[col][row+1].isSolid() == true){
+				fullness--;
+			if(fullness <= 0){
 				fullness = 1;
 			}
 			water(col+1, row, map, fullness );
 			}
 		}
 		
-		fullness = save;
+		fullness = 3;
 		//left
 		if(col-1 >= 0 && !(map.getTiles()[col-1][row] instanceof Water) && !(map.getTiles()[col-1][row].isSolid())) {
 			if((row-1 >= 0) && (map.getTiles()[col-1][row-1] == null)){
@@ -245,8 +253,8 @@ public class Level {
 		fullness--;
 			water(col-1, row, map, fullness );
 	}
+}
 		}
-
 	}
 
 
