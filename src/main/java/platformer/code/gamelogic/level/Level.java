@@ -205,8 +205,11 @@ public class Level {
 		} else if(fullness == 2){
 			wName = "Half_water";
 		}
-		else{
+		else if (fullness ==1){
 			wName = "Quarter_water";
+		}
+		else{
+			wName = "Falling_water";
 		}
 		Water w = new Water (col, row, tileSize, tileset.getImage(wName), this, fullness);
 		int save = fullness;
@@ -216,15 +219,32 @@ public class Level {
 
                        //if we can’t go down go left and right.
 		//right
-		if(col+1 < map.getTiles().length && !(map.getTiles()[col+1][row] instanceof Water) && !(map.getTiles()[col+1][row].isSolid()) && (map.getTiles()[col+1][row] != null)) {
+		if(map.getTiles()[col][row+1].isSolid() != true){
+			water(col, row +1, map, 0 );
+			
+		} else{
+			//(map.getTiles()[col+1][row] != null) adds at the end of if below
+		if(col+1 < map.getTiles().length && !(map.getTiles()[col+1][row] instanceof Water) && !(map.getTiles()[col+1][row].isSolid())) {
+			
 			fullness--;
+			if(fullness ==0){
+				fullness = 1;
+			}
 			water(col+1, row, map, fullness );
-		} 
+			}
+		}
+		
 		fullness = save;
 		//left
 		if(col-1 >= 0 && !(map.getTiles()[col-1][row] instanceof Water) && !(map.getTiles()[col-1][row].isSolid())) {
-			fullness--;
+			if((row-1 >= 0) && (map.getTiles()[col-1][row-1] == null)){
+				water(col-1, row -1, map, 0 );
+			}
+			
+		 else{
+		fullness--;
 			water(col-1, row, map, fullness );
+	}
 		}
 
 	}
