@@ -196,9 +196,13 @@ public class Level {
 	//#############################################################################################################
 	//Your code goes here! 
 	//Please make sure you read the rubric/directions carefully and implement the solution recursively!
+	//Precondition: the column and row fit within the grid, and fullness is 0-3 inclusive, and map is a valid map
+	//Postcondtion: creates the flowing water tiles as necessary when touching a flower in game
 	private void water(int col, int row, Map map, int fullness) {
-		  
+		  //determines the image used based off the fullness
 		String wName = "";
+
+		
 
 		if(fullness == 3){
 			wName = "Full_water";
@@ -211,51 +215,43 @@ public class Level {
 		else{
 			wName = "Falling_water";
 		}
+		//makes a new water tile after being called recursively
 		Water w = new Water (col, row, tileSize, tileset.getImage(wName), this, fullness);
-		
 		map.addTile(col, row, w);
 
                        //check if we can go down
 
                        //if we can’t go down go left and right.
-		//right
-		if((map.getTiles()[col][row+1].isSolid() != true) && (map.getTiles()[col][row+2].isSolid() != true)){
-			fullness = 4;
+		//down check
+		if(row+1 < map.getTiles()[col].length && !(map.getTiles()[col][row+1].isSolid()) && !(map.getTiles()[col][row+1] instanceof Water)){
+			if(row+2 < map.getTiles()[col].length && !(map.getTiles()[col][row+2].isSolid())){
 			water(col, row +1, map, 0 );
 		} else{
-			//fullness = 4;
-			if(col+1 < map.getTiles().length && !(map.getTiles()[col+1][row] instanceof Water) && !(map.getTiles()[col+1][row].isSolid())) {
-				if(map.getTiles()[col][row+1].isSolid() != true){
-					if(fullness <=0){
-					fullness = 1;
-				} else{
-					fullness--;
-				}
-			water(col+1, row+1, map, fullness );
-			}
-			else if(map.getTiles()[col][row+1].isSolid() == true){
-				fullness--;
-			if(fullness <= 0){
-				fullness = 1;
-			}
-			water(col+1, row, map, fullness );
-			}
+			water(col, row +1, map, 3 );
 		}
-		
-		fullness = 3;
+		return;
+	}
+	if(fullness == 0){
+		return;
+	}
+	if(fullness==3){
+		fullness = 2;
+	} else{
+		fullness = 1;
+	}
+		//right
+		if(col+1 < map.getTiles().length && !(map.getTiles()[col+1][row] instanceof Water) && !(map.getTiles()[col+1][row].isSolid())) {
+		water(col+1, row, map, fullness);
+		}
 		//left
+
 		if(col-1 >= 0 && !(map.getTiles()[col-1][row] instanceof Water) && !(map.getTiles()[col-1][row].isSolid())) {
-			if((row-1 >= 0) && (map.getTiles()[col-1][row-1] == null)){
-				water(col-1, row -1, map, 0 );
-			}
-			
-		 else{
-		fullness--;
-			water(col-1, row, map, fullness );
-	}
-}
+		water(col-1, row, map, fullness);
+		
 		}
 	}
+
+	
 
 
 
