@@ -258,7 +258,10 @@ public class Level {
 	}
 		//Adds gas tiles until the requisite number of squares are filled or there is no more room 
 private void addGas(int col, int row, Map map, int numSquaresToFill, ArrayList<Gas> placedThisRound) {
-	int count = 0;
+	int tempCol = 0;
+	int tempRow= 0;
+	int round = 0;
+	
 	Gas g = new Gas(col, row, tileSize, tileset.getImage("GasOne"), this, 3);
 	map.addTile(col, row, g);
 	int[][] arr = {
@@ -271,24 +274,32 @@ private void addGas(int col, int row, Map map, int numSquaresToFill, ArrayList<G
 		{1,1},
 		{1,-1}
 	};
-while(count < numSquaresToFill-1){
-	//int round = 1;
-	for(int i = 0; i< arr.length; i++){
-		if((col + arr[i][1] < map.getTiles().length)  
-		&& (row + arr[i][0] < map.getTiles()[0].length)
-		&& !(map.getTiles()[col + arr[i][1]][row + arr[i][0]].isSolid())
-		&& !(map.getTiles()[col + arr[i][1]][row + arr[i][0]] instanceof Gas)
+
+	for(int k =-1; k < arr.length; k++){
+		if(k==-1){
+			tempCol = 0;
+			tempRow = 0;
+		} else{
+			tempCol += arr[k][1];
+		 	tempRow += arr[k][0];
+		}
+	for(int i = 0, count = 0; (i< arr.length) && count < numSquaresToFill-1; i++){
+		if((col + arr[i][1] + tempCol < map.getTiles().length)  
+		&& (row + arr[i][0] + tempRow< map.getTiles()[0].length)
+		&& !(map.getTiles()[col + arr[i][1] + tempCol][row + arr[i][0] + tempRow].isSolid())
+		&& !(map.getTiles()[col + arr[i][1] + tempCol][row + arr[i][0] + tempRow] instanceof Gas)
 		){
-		 g = new Gas(col + arr[i][1], row + arr[i][0], tileSize, tileset.getImage("GasOne"), this, 3);
-		 map.addTile(col + arr[i][1], row + arr[i][0], g);
-		 //Gas temp = new Gas(col + arr[i][1], row + arr[i][0], tileSize, tileset.getImage("GasOne"), this, 3);
+		 g = new Gas(col + arr[i][1] + tempCol, row + arr[i][0] + tempRow, tileSize, tileset.getImage("GasOne"), this, 3);
+		 map.addTile(col + arr[i][1] + tempCol, row + arr[i][0] + tempRow, g);
+		 //Gas temp = new Gas(col + arr[i][1] + tempCol, row + arr[i][0] + tempRow, tileSize, tileset.getImage("GasOne"), this, 3);
 		 //placedThisRound.add(temp);
-		// count++;
+		count++;
+	}
 	}
 }
 
 	}
-}
+
 
 
 
