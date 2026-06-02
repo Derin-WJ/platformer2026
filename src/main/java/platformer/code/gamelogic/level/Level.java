@@ -118,7 +118,10 @@ public class Level {
 					tiles[x][y] = new Water(xPosition, yPosition, tileSize, tileset.getImage("Half_water"), this, 2);
 				else if (values[x][y] == 21)
 					tiles[x][y] = new Water(xPosition, yPosition, tileSize, tileset.getImage("Quarter_water"), this, 1);
+				else if(values[x][y] == 22)
+					tiles[x][y] = new SolidTile(xPosition, yPosition, tileSize, tileset.getImage("Cone"), this);
 			}
+				
 
 		}
 		enemies = new Enemy[enemiesList.size()];
@@ -260,9 +263,10 @@ public class Level {
 private void addGas(int col, int row, Map map, int numSquaresToFill, ArrayList<Gas> placedThisRound) {
 	int tempCol = 0;
 	int tempRow= 0;
-	int round = 0;
+	int check = 0;
 	
 	Gas g = new Gas(col, row, tileSize, tileset.getImage("GasOne"), this, 3);
+	placedThisRound.add(g);
 	map.addTile(col, row, g);
 	int[][] arr = {
 		{-1,0},
@@ -283,20 +287,31 @@ private void addGas(int col, int row, Map map, int numSquaresToFill, ArrayList<G
 			tempCol += arr[k][1];
 		 	tempRow += arr[k][0];
 		}
-	for(int i = 0, count = 0; (i< arr.length) && count < numSquaresToFill-1; i++){
+	 //ewugeughuweighweuogheiuoghioehgoeiAghoESIghegeGogEOGhGOH
+	for(int i = 0, count = 0; (i< arr.length) && (count < numSquaresToFill-1); i++){
 		if((col + arr[i][1] + tempCol < map.getTiles().length)  
 		&& (row + arr[i][0] + tempRow< map.getTiles()[0].length)
 		&& !(map.getTiles()[col + arr[i][1] + tempCol][row + arr[i][0] + tempRow].isSolid())
 		&& !(map.getTiles()[col + arr[i][1] + tempCol][row + arr[i][0] + tempRow] instanceof Gas)
 		){
-		 g = new Gas(col + arr[i][1] + tempCol, row + arr[i][0] + tempRow, tileSize, tileset.getImage("GasOne"), this, 3);
-		 map.addTile(col + arr[i][1] + tempCol, row + arr[i][0] + tempRow, g);
-		 //Gas temp = new Gas(col + arr[i][1] + tempCol, row + arr[i][0] + tempRow, tileSize, tileset.getImage("GasOne"), this, 3);
-		 //placedThisRound.add(temp);
-		count++;
+		 
+		g = new Gas(col + arr[i][1] + tempCol, row + arr[i][0] + tempRow, tileSize, tileset.getImage("GasOne"), this, 3);
+		for(int j = 0; j<placedThisRound.size(); j++){
+			if(g.equals(placedThisRound.get(j))){
+				check++;
+			}
+		} 
+			if(check == 0){
+			map.addTile(col + arr[i][1] + tempCol, row + arr[i][0] + tempRow, g);
+			placedThisRound.add(g);	
+			count++;
+			}
+		 }
+		 
+		}
 	}
-	}
-}
+	
+
 
 	}
 
