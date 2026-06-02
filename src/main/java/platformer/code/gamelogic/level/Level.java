@@ -264,6 +264,7 @@ private void addGas(int col, int row, Map map, int numSquaresToFill, ArrayList<G
 	int tempCol = 0;
 	int tempRow= 0;
 	int check = 0;
+	int count = 0;
 	
 	Gas g = new Gas(col, row, tileSize, tileset.getImage("GasOne"), this, 3);
 	placedThisRound.add(g);
@@ -287,12 +288,13 @@ private void addGas(int col, int row, Map map, int numSquaresToFill, ArrayList<G
 			tempCol += arr[k][1];
 		 	tempRow += arr[k][0];
 		}
-	 //ewugeughuweighweuogheiuoghioehgoeiAghoESIghegeGogEOGhGOH
-	for(int i = 0, count = 0; (i< arr.length) && (count < numSquaresToFill-1); i++){
+
+	for(int i = 0; i< arr.length; i++){
 		if((col + arr[i][1] + tempCol < map.getTiles().length)  
 		&& (row + arr[i][0] + tempRow< map.getTiles()[0].length)
 		&& !(map.getTiles()[col + arr[i][1] + tempCol][row + arr[i][0] + tempRow].isSolid())
 		&& !(map.getTiles()[col + arr[i][1] + tempCol][row + arr[i][0] + tempRow] instanceof Gas)
+		&& (count < numSquaresToFill)
 		){
 		 
 		g = new Gas(col + arr[i][1] + tempCol, row + arr[i][0] + tempRow, tileSize, tileset.getImage("GasOne"), this, 3);
@@ -310,10 +312,10 @@ private void addGas(int col, int row, Map map, int numSquaresToFill, ArrayList<G
 		 
 		}
 	}
+}
+
+
 	
-
-
-	}
 
 
 
