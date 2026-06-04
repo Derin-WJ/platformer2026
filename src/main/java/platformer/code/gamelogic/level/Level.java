@@ -260,14 +260,13 @@ public class Level {
 	
 	}
 		//Adds gas tiles until the requisite number of squares are filled or there is no more room 
+		//Precondition: all the parameters are valid and not null, numSquaresToFill is not 0,
+		//and col and row are in bounds 
+		//Postcondition: Creates gas blocks that are placed on the map according to the
+		//logic specified by the project
 private void addGas(int col, int row, Map map, int numSquaresToFill, ArrayList<Gas> placedThisRound) {
-	int tempCol = 0;
-	int tempRow= 0;
-	int check = 0;
-	int count = 0;
-	//int infiniteChecker = 0;
-	
-	Gas g = new Gas(col, row, tileSize, tileset.getImage("GasOne"), this, 3);
+
+	Gas g = new Gas(col, row, tileSize, tileset.getImage("GasOne"), this, 0);
 	placedThisRound.add(g);
 	map.addTile(col, row, g);
 	int[][] arr = {
@@ -280,47 +279,30 @@ private void addGas(int col, int row, Map map, int numSquaresToFill, ArrayList<G
 		{1,1},
 		{1,-1}
 	};
-while(count<numSquaresToFill-1){
-	for(int k =-1; k < arr.length; k++){
-		if(k==-1){
-			tempCol = 0;
-			tempRow = 0;
-		} else{
-			tempCol += arr[k][1];
-		 	tempRow += arr[k][0];
-		}
-//}
-	for(int i = 0; i< arr.length; i++){
-		if((col + arr[i][1] + tempCol < map.getTiles().length)  
-		&& (row + arr[i][0] + tempRow< map.getTiles()[0].length)
-		&& !(map.getTiles()[col + arr[i][1] + tempCol][row + arr[i][0] + tempRow].isSolid())
-		&& !(map.getTiles()[col + arr[i][1] + tempCol][row + arr[i][0] + tempRow] instanceof Gas)
-		&& (count < numSquaresToFill-1)
-		){
-		 
-			g = new Gas(col + arr[i][1] + tempCol, row + arr[i][0] + tempRow, tileSize, tileset.getImage("GasOne"), this, 3);
-			for(int j = 0; j<placedThisRound.size(); j++){
-				if(g.equals(placedThisRound.get(j))){
-					check++;
-				}
-			} 
-				if(check == 0){
-				map.addTile(col + arr[i][1] + tempCol, row + arr[i][0] + tempRow, g);
+
+	for(int j = 0; j< placedThisRound.size(); j++){
+		col = placedThisRound.get(j).getCol();
+		row = placedThisRound.get(j).getRow();
+		for(int i = 0; i< arr.length; i++){
+			if(
+			(col + arr[i][1] < map.getTiles().length)  
+			&& (row + arr[i][0] < map.getTiles()[0].length)
+			&& (row + arr[i][0] >= 0)
+			&& (col + arr[i][1]  >= 0)
+			&& !(map.getTiles()[col + arr[i][1]][row + arr[i][0]].isSolid())
+			&& !(map.getTiles()[col + arr[i][1]][row + arr[i][0]] instanceof Gas)
+			&& (numSquaresToFill-1 > 0)
+			){
+				g = new Gas(col + arr[i][1], row + arr[i][0], tileSize, tileset.getImage("GasOne"), this, 0);
+				map.addTile(col + arr[i][1], row + arr[i][0], g);
 				placedThisRound.add(g);	
-				count++;
-				}
-		 } 
-		 
-	}
+				numSquaresToFill--;
+					
+			}
+		} 
 	}
 }
-}
-
-
 	
-
-
-
 
 	public void draw(Graphics g) {
 	   	 g.translate((int) -camera.getX(), (int) -camera.getY());
