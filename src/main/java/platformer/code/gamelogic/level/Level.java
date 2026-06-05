@@ -1,5 +1,7 @@
 package platformer.code.gamelogic.level;
 
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +37,7 @@ public class Level {
 
 	private ArrayList<Enemy> enemiesList = new ArrayList<>();
 	private ArrayList<Flower> flowers = new ArrayList<>();
+	private ArrayList<Water> waters = new ArrayList<>();
 
 	private List<PlayerDieListener> dieListeners = new ArrayList<>();
 	private List<PlayerWinListener> winListeners = new ArrayList<>();
@@ -45,7 +48,8 @@ public class Level {
 	private int tileSize;
 	private Tileset tileset;
 	public static float GRAVITY = 70;
-
+	private long waterTimer  = 0;
+	private long timeAmount = 5;
 	public Level(LevelData leveldata) {
 		this.leveldata = leveldata;
 		mapdata = leveldata.getMapdata();
@@ -178,7 +182,22 @@ public class Level {
 					i--;
 				}
 			}
+			for (int i = 0; i < waters.size(); i++) {
+				if (waters.get(i).getHitbox().isIntersecting(player.getHitbox())) {
+					if(waterTimer == 0){
+						waterTimer = System.currentTimeMillis();
+					}
+					else{
+						if((System.currentTimeMillis() - waterTimer) / 1000 >= timeAmount){
+							//IMPLEMENT    																					UIJEWAGHAUIWEHGIJNGFHngpi9jngfuaHGEARUOHNZSAD8IOOHNETDOLIGT8hswnr
+							waterTimer = 0;
+						}
+					}
+				}
+			}
 
+
+		
 			// Update the enemies
 			for (int i = 0; i < enemies.length; i++) {
 				enemies[i].update(tslf);
@@ -222,7 +241,9 @@ public class Level {
 			wName = "Falling_water";
 		}
 		//makes a new water tile after being called recursively
+		
 		Water w = new Water (col, row, tileSize, tileset.getImage(wName), this, fullness);
+		waters.add(w);
 		map.addTile(col, row, w);
 
                        //check if we can go down
@@ -360,8 +381,14 @@ private void addGas(int col, int row, Map map, int numSquaresToFill, ArrayList<G
 	   	 // used for debugging
 	   	 if (Camera.SHOW_CAMERA)
 	   		 camera.draw(g);
-	   	 g.translate((int) +camera.getX(), (int) +camera.getY());
-	    }
+	   	 
+	    
+		g.setColor(Color.red);
+		g.setFont(new Font("Arial", Font.BOLD, 40));
+		g.drawString(((System.currentTimeMillis()-waterTimer)/1000) + "", (int)player.getX(), (int) player.getY() + 100);
+		g.translate((int) +camera.getX(), (int) +camera.getY());
+		}
+
 
 
 	// --------------------------Die-Listener
