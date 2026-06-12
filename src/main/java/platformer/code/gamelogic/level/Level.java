@@ -38,6 +38,7 @@ public class Level {
 	private ArrayList<Enemy> enemiesList = new ArrayList<>();
 	private ArrayList<Flower> flowers = new ArrayList<>();
 	private ArrayList<Water> waters = new ArrayList<>();
+	private ArrayList<Gas> gasses = new ArrayList<>();
 
 	private List<PlayerDieListener> dieListeners = new ArrayList<>();
 	private List<PlayerWinListener> winListeners = new ArrayList<>();
@@ -48,8 +49,10 @@ public class Level {
 	private int tileSize;
 	private Tileset tileset;
 	public static float GRAVITY = 70;
-	private long waterTimer  = 0;
+
+	private long gasTimer  = 0;
 	private long timeAmount = 5;
+	
 	public Level(LevelData leveldata) {
 		this.leveldata = leveldata;
 		mapdata = leveldata.getMapdata();
@@ -182,23 +185,29 @@ public class Level {
 					i--;
 				}
 			}
-			for (int i = 0; i < waters.size(); i++) {
-				if (waters.get(i).getHitbox().isIntersecting(player.getHitbox())) {
-					if(waterTimer == 0){
-						waterTimer = System.currentTimeMillis();
+			boolean touchingGas = false;
+			for (int i = 0; i < gasses.size(); i++) {
+				if (gasses.get(i).getHitbox().isIntersecting(player.getHitbox())) {
+					touchingGas = true;
+					//i'm in water here
+					
+					if(gasTimer == 0){
+						gasTimer = System.currentTimeMillis();
 					}
 					else{
-						if((System.currentTimeMillis() - waterTimer) / 1000 >= timeAmount){
+						if((System.currentTimeMillis() - gasTimer) / 1000 >= timeAmount){
 							//IMPLEMENT    																					UIJEWAGHAUIWEHGIJNGFHngpi9jngfuaHGEARUOHNZSAD8IOOHNETDOLIGT8hswnr
-							waterTimer = 0;
+							gasTimer = 0;
 						}
 					}
 				}
 			}
-
+			if(!touchingGas){
+				//i'm not touching water!
+			}
 
 		
-			// Update the enemies
+			//  the enemies
 			for (int i = 0; i < enemies.length; i++) {
 				enemies[i].update(tslf);
 				if (player.getHitbox().isIntersecting(enemies[i].getHitbox())) {
@@ -316,6 +325,7 @@ private void addGas(int col, int row, Map map, int numSquaresToFill, ArrayList<G
 			){
 				g = new Gas(col + arr[i][1], row + arr[i][0], tileSize, tileset.getImage("GasOne"), this, 0);
 				map.addTile(col + arr[i][1], row + arr[i][0], g);
+				gasses.add(g);
 				placedThisRound.add(g);	
 				numSquaresToFill--;
 					
@@ -323,6 +333,8 @@ private void addGas(int col, int row, Map map, int numSquaresToFill, ArrayList<G
 		} 
 	}
 }
+
+
 	
 
 	public void draw(Graphics g) {
@@ -385,7 +397,9 @@ private void addGas(int col, int row, Map map, int numSquaresToFill, ArrayList<G
 	    
 		g.setColor(Color.red);
 		g.setFont(new Font("Arial", Font.BOLD, 40));
-		g.drawString(((System.currentTimeMillis()-waterTimer)/1000) + "", (int)player.getX(), (int) player.getY() + 100);
+		if(gasTimer != 0){
+		g.drawString(((System.currentTimeMillis()-gasTimer)/1000) + "", (int)player.getX(), (int) player.getY() + 100);
+		}
 		g.translate((int) +camera.getX(), (int) +camera.getY());
 		}
 
