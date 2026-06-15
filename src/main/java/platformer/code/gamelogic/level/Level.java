@@ -67,6 +67,7 @@ public class Level {
 	}
 
 	public void restartLevel() {
+		gasses.clear();
 		int[][] values = mapdata.getValues();
 		Tile[][] tiles = new Tile[width][height];
 
@@ -185,25 +186,41 @@ public class Level {
 					i--;
 				}
 			}
+
 			boolean touchingGas = false;
+			// long savedTime;
+			// if (gasses.get(i).getHitbox().isIntersecting(player.getHitbox())){
+			// 	touchingGas = true;
+			// 	savedTime = System.currentTimeMillis();
+			// 	while(touchingGas){
+			// 		gasTimer = (System.currentTimeMillis() - savedTime) / 1000 >= timeAmount;
+			// 	}
+			// }
+
+
 			for (int i = 0; i < gasses.size(); i++) {
 				if (gasses.get(i).getHitbox().isIntersecting(player.getHitbox())) {
 					touchingGas = true;
-					//i'm in water here
+					//i'm in gas here
 					
 					if(gasTimer == 0){
 						gasTimer = System.currentTimeMillis();
+	
 					}
+
 					else{
 						if((System.currentTimeMillis() - gasTimer) / 1000 >= timeAmount){
 							//IMPLEMENT    																					UIJEWAGHAUIWEHGIJNGFHngpi9jngfuaHGEARUOHNZSAD8IOOHNETDOLIGT8hswnr
 							gasTimer = 0;
+							onPlayerDeath();
+							
 						}
 					}
 				}
 			}
 			if(!touchingGas){
-				//i'm not touching water!
+				//i'm not touching gas!
+				gasTimer = 0;
 			}
 
 		
@@ -398,7 +415,7 @@ private void addGas(int col, int row, Map map, int numSquaresToFill, ArrayList<G
 		g.setColor(Color.red);
 		g.setFont(new Font("Arial", Font.BOLD, 40));
 		if(gasTimer != 0){
-		g.drawString(((System.currentTimeMillis()-gasTimer)/1000) + "", (int)player.getX(), (int) player.getY() + 100);
+			g.drawString(((System.currentTimeMillis()-gasTimer)/1000) + "", (int)player.getX(), (int) player.getY() + 100);
 		}
 		g.translate((int) +camera.getX(), (int) +camera.getY());
 		}
