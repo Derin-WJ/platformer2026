@@ -180,8 +180,8 @@ public class Level {
 				if (flowers.get(i).getHitbox().isIntersecting(player.getHitbox())) {
 					if(flowers.get(i).getType() == 1)
 						water(flowers.get(i).getCol(), flowers.get(i).getRow(), map, 3);
-						else
-					addGas(flowers.get(i).getCol(), flowers.get(i).getRow(), map, 20, new ArrayList<Gas>());
+					else
+						addGas(flowers.get(i).getCol(), flowers.get(i).getRow(), map, 20, new ArrayList<Gas>());
 					flowers.remove(i);
 					i--;
 				}
@@ -201,6 +201,8 @@ public class Level {
 			for (int i = 0; i < gasses.size(); i++) {
 				if (gasses.get(i).getHitbox().isIntersecting(player.getHitbox())) {
 					touchingGas = true;
+					 player.walkSpeed = 180;
+					 player.jumpPower = 2000;
 					//i'm in gas here
 					
 					if(gasTimer == 0){
@@ -221,7 +223,24 @@ public class Level {
 			if(!touchingGas){
 				//i'm not touching gas!
 				gasTimer = 0;
+				player.walkSpeed = 400;
+					 player.jumpPower = 1350;
 			}
+			
+
+		boolean touchingWater = false;
+		for (int i = 0; i < waters.size(); i++) {
+			if (waters.get(i).getHitbox().isIntersecting(player.getHitbox())) {
+
+				touchingWater = true;
+				
+			}
+		}
+		player.waterState(touchingWater);
+
+
+
+
 
 		
 			//  the enemies
@@ -315,7 +334,9 @@ private void addGas(int col, int row, Map map, int numSquaresToFill, ArrayList<G
 
 	Gas g = new Gas(col, row, tileSize, tileset.getImage("GasOne"), this, 0);
 	placedThisRound.add(g);
+	gasses.add(g);
 	map.addTile(col, row, g);
+	gasses.add(g);
 	int[][] arr = {
 		{-1,0},
 		{-1,1},

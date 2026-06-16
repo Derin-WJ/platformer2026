@@ -30,6 +30,9 @@ public class PhysicsObject extends GameObject{
 		this.closestMatrix = new Tile[4];
 	}
 
+
+
+
 	@Override
 	public void update(float tslf) {
 		movementVector.y += (Level.GRAVITY * Level.GRAVITY) * tslf;

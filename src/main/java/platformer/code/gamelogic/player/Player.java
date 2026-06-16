@@ -15,6 +15,7 @@ public class Player extends PhysicsObject{
 	public float jumpPower = 1350;
 
 	private boolean isJumping = false;
+	private boolean water = false;
 
 	public Player(float x, float y, Level level) {
 	
@@ -26,7 +27,7 @@ public class Player extends PhysicsObject{
 	@Override
 	public void update(float tslf) {
 		super.update(tslf);
-		
+	if(!water){
 		movementVector.x = 0;
 		if(PlayerInput.isLeftKeyDown()) {
 			movementVector.x = -walkSpeed;
@@ -38,9 +39,26 @@ public class Player extends PhysicsObject{
 			movementVector.y = -jumpPower;
 			isJumping = true;
 		}
+	}else{
+		movementVector.x = 0;
+		if(PlayerInput.isLeftKeyDown()) {
+			movementVector.x = +walkSpeed;
+		}
+		if(PlayerInput.isRightKeyDown()) {
+			movementVector.x = -walkSpeed;
+		}
+		if(PlayerInput.isJumpKeyDown() && !isJumping) {
+			movementVector.y = -jumpPower;
+			isJumping = true;
+		}
+		
+	}
 		
 		isJumping = true;
 		if(collisionMatrix[BOT] != null) isJumping = false;
+	}
+	public void waterState(boolean touchingWater){
+		water = touchingWater;
 	}
 
 	@Override
