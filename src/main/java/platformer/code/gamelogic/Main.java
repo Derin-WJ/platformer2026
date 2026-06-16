@@ -42,6 +42,7 @@ public class Main extends GameBase implements PlayerDieListener, PlayerWinListen
 	public void init() {
 		GameResources.load();
 
+		//map 1 is normal
 		currentLevelIndex = 2;
 
 		levels = new LevelData[3];
